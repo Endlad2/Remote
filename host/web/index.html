@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>OWRT Console</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@5.3.0/css/xterm.css">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div id="app">
+
+  <header id="topbar">
+    <div class="brand">OWRT&nbsp;<span>Console</span></div>
+    <div class="controls">
+      <label class="lbl">Клиент</label>
+      <select id="clientSelect"><option value="">— нет —</option></select>
+      <span id="statusDot" class="dot off" title="статус"></span>
+      <span id="statusText" class="status-text">не выбран</span>
+      <button id="btnCtrlC" class="btn danger" title="SIGINT">Ctrl+C</button>
+      <button id="btnHistory" class="btn">История</button>
+      <button id="btnFiles" class="btn">Файлы</button>
+      <button id="btnClear" class="btn">Очистить</button>
+    </div>
+  </header>
+
+  <main id="terminalWrap">
+    <div id="terminal"></div>
+  </main>
+
+  <aside id="historyPanel" class="drawer hidden">
+    <div class="drawer-head">
+      <span>История команд</span>
+      <button id="btnHistoryClose" class="x">×</button>
+    </div>
+    <ul id="historyList"></ul>
+    <button id="btnHistoryClear" class="btn danger full">Очистить историю</button>
+  </aside>
+
+  <aside id="filesPanel" class="drawer hidden">
+    <div class="drawer-head">
+      <span>Файлы</span>
+      <button id="btnFilesClose" class="x">×</button>
+    </div>
+    <div class="drawer-body">
+      <h4>Скачать с клиента</h4>
+      <input id="dlPath" type="text" placeholder="/etc/config/network">
+      <button id="btnDownload" class="btn">Скачать</button>
+
+      <h4>Загрузить на клиент</h4>
+      <input id="ulPath" type="text" placeholder="/tmp/file.bin">
+      <input id="ulFile" type="file">
+      <button id="btnUpload" class="btn">Загрузить</button>
+
+      <div id="fileStatus" class="file-status"></div>
+    </div>
+  </aside>
+
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/xterm@5.3.0/lib/xterm.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xterm-addon-fit@0.8.0/lib/xterm-addon-fit.js"></script>
+<script src="app.js"></script>
+</body>
+</html>

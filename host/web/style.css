@@ -1,0 +1,79 @@
+/* OWRT Console — тёмная минималистичная тема терминала */
+* { box-sizing: border-box; }
+html, body { margin: 0; height: 100%; background: #0d0f12; color: #d7dde5; }
+body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+#app { display: flex; flex-direction: column; height: 100vh; position: relative; }
+
+/* ---------- topbar ---------- */
+#topbar {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 10px 16px; background: #14181d; border-bottom: 1px solid #232a31;
+  flex: 0 0 auto;
+}
+.brand { font-weight: 600; letter-spacing: .3px; font-size: 16px; }
+.brand span { color: #4d6bfe; }
+
+.controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+.lbl { font-size: 12px; color: #8b96a3; }
+
+select, input[type=text], input[type=file] {
+  background: #0f1317; color: #d7dde5; border: 1px solid #2a323b;
+  border-radius: 6px; padding: 6px 8px; font-size: 13px; outline: none;
+}
+select { min-width: 150px; }
+input[type=text] { width: 100%; }
+
+.btn {
+  background: #1c2229; color: #d7dde5; border: 1px solid #2a323b;
+  border-radius: 6px; padding: 6px 12px; font-size: 13px; cursor: pointer;
+  transition: background .12s, border-color .12s;
+}
+.btn:hover { background: #232b34; border-color: #3a444f; }
+.btn.danger { color: #ff9d9d; border-color: #4a2a2a; }
+.btn.danger:hover { background: #2a1c1c; }
+.btn.full { width: 100%; margin-top: 10px; }
+
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+.dot.on  { background: #46c96a; box-shadow: 0 0 6px #46c96a88; }
+.dot.off { background: #55606b; }
+.status-text { font-size: 12px; color: #8b96a3; }
+
+/* ---------- terminal ---------- */
+#terminalWrap { flex: 1 1 auto; padding: 8px; overflow: hidden; }
+#terminal { width: 100%; height: 100%; }
+
+/* ---------- drawers ---------- */
+.drawer {
+  position: absolute; top: 0; right: 0; height: 100%; width: 320px;
+  background: #14181d; border-left: 1px solid #232a31;
+  display: flex; flex-direction: column; z-index: 10;
+  box-shadow: -8px 0 24px rgba(0,0,0,.4);
+}
+.drawer.hidden { display: none; }
+.drawer-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 14px; border-bottom: 1px solid #232a31; font-weight: 600;
+}
+.drawer-head .x {
+  background: none; border: none; color: #8b96a3; font-size: 22px;
+  cursor: pointer; line-height: 1; padding: 0 4px;
+}
+.drawer-head .x:hover { color: #fff; }
+.drawer-body { padding: 14px; overflow-y: auto; }
+.drawer-body h4 { margin: 14px 0 8px; font-size: 13px; color: #8b96a3; font-weight: 500; }
+.drawer-body h4:first-child { margin-top: 0; }
+.drawer-body .btn { margin-top: 8px; }
+
+#historyList {
+  list-style: none; margin: 0; padding: 0; overflow-y: auto; flex: 1 1 auto;
+}
+#historyList li {
+  padding: 8px 14px; border-bottom: 1px solid #1c2229;
+  font-family: ui-monospace, Menlo, Consolas, monospace; font-size: 12px;
+  color: #b8c2cd; cursor: pointer; word-break: break-all;
+}
+#historyList li:hover { background: #1c2229; color: #fff; }
+
+.file-status { margin-top: 14px; font-size: 12px; color: #8b96a3; min-height: 18px; }
+.file-status.ok { color: #46c96a; }
+.file-status.err { color: #ff9d9d; }
