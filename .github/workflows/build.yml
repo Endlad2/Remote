@@ -1,7 +1,7 @@
 # .github/workflows/build.yml
 #
 # Единый workflow для OWRT Console:
-#   - lint:   go vet для host и client (gofmt убран)
+#   - lint:   go vet для host и client
 #   - host:   linux/amd64  (x86_64 VPS)
 #   - client: linux/arm64  (aarch64, OpenWRT)
 #   - release: при теге v* прикладывает артефакты к GitHub Release
@@ -75,13 +75,15 @@ jobs:
           CGO_ENABLED: "0"
         run: |
           mkdir -p ../dist
-          go build -trimpath -ldflags "-s -w" -o ../dist/owrt-host-linux-amd64 .
+          go build -trimpath -ldflags "-s -w" -o ../dist/owrt-host .
 
       - name: package (binary + web assets + README)
         run: |
+          set -e
           cd dist
+          rm -rf owrt-host-linux-amd64 owrt-host-linux-amd64.tar.gz owrt-host-linux-amd64.tar.gz.sha256
           mkdir -p owrt-host-linux-amd64
-          mv owrt-host-linux-amd64 owrt-host-linux-amd64/owrt-host
+          mv owrt-host owrt-host-linux-amd64/owrt-host
           cp -r ../host/web owrt-host-linux-amd64/web
           cp ../README.md owrt-host-linux-amd64/ 2>/dev/null || true
           tar czf owrt-host-linux-amd64.tar.gz owrt-host-linux-amd64
@@ -122,13 +124,15 @@ jobs:
           CGO_ENABLED: "0"
         run: |
           mkdir -p ../dist
-          go build -trimpath -ldflags "-s -w" -o ../dist/owrt-client-linux-arm64 .
+          go build -trimpath -ldflags "-s -w" -o ../dist/owrt-client .
 
       - name: package
         run: |
+          set -e
           cd dist
+          rm -rf owrt-client-linux-arm64 owrt-client-linux-arm64.tar.gz owrt-client-linux-arm64.tar.gz.sha256
           mkdir -p owrt-client-linux-arm64
-          mv owrt-client-linux-arm64 owrt-client-linux-arm64/owrt-client
+          mv owrt-client owrt-client-linux-arm64/owrt-client
           cp ../README.md owrt-client-linux-arm64/ 2>/dev/null || true
           tar czf owrt-client-linux-arm64.tar.gz owrt-client-linux-arm64
           sha256sum owrt-client-linux-arm64.tar.gz > owrt-client-linux-arm64.tar.gz.sha256
