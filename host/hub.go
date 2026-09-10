@@ -2,8 +2,9 @@
 //
 // Держит реестр клиентов (OpenWRT) по имени и реестр панелей (браузеров).
 // Маршрутизирует:
-//   панель -> клиент:   input, signal, file_*
-//   клиент -> панель:   output, file_*, client_status
+//
+//	панель -> клиент:   input, signal, file_*
+//	клиент -> панель:   output, file_*, client_status
 package main
 
 import (
@@ -152,7 +153,7 @@ func (h *Hub) HandleClientWS(w http.ResponseWriter, r *http.Request) {
 		hub:        h,
 		conn:       conn,
 		RemoteAddr: r.RemoteAddr,
-		send:       make(chan []byte, 256),
+		outbox:     make(chan []byte, 256),
 	}
 	go c.writeLoop()
 	c.readLoop()
@@ -165,9 +166,9 @@ func (h *Hub) HandlePanelWS(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	p := &PanelConn{
-		hub:  h,
-		conn: conn,
-		send: make(chan []byte, 256),
+		hub:    h,
+		conn:   conn,
+		outbox: make(chan []byte, 256),
 	}
 	h.registerPanel(p)
 	go p.writeLoop()

@@ -16,7 +16,7 @@ type ClientConn struct {
 	RemoteAddr string
 	Name       string
 
-	send      chan []byte
+	outbox    chan []byte
 	closeOnce sync.Once
 }
 
@@ -28,7 +28,7 @@ func (c *ClientConn) writeLoop() {
 	}()
 	for {
 		select {
-		case msg, ok := <-c.send:
+		case msg, ok := <-c.outbox:
 			c.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 			if !ok {
 				c.conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -115,7 +115,7 @@ func (c *ClientConn) Send(m Msg) {
 		return
 	}
 	select {
-	case c.send <- b:
+	case c.outbox <- b:
 	default:
 		log.Printf("client %s: очередь отправки переполнена, дропаю", c.Name)
 	}
@@ -123,7 +123,7 @@ func (c *ClientConn) Send(m Msg) {
 
 func (c *ClientConn) close() {
 	c.closeOnce.Do(func() {
-		close(c.send)
+		close(c.outbox)
 		c.conn.Close()
 	})
 }

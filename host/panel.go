@@ -15,7 +15,7 @@ type PanelConn struct {
 	conn   *websocket.Conn
 	Target string
 
-	send      chan []byte
+	outbox    chan []byte
 	closeOnce sync.Once
 }
 
@@ -27,7 +27,7 @@ func (p *PanelConn) writeLoop() {
 	}()
 	for {
 		select {
-		case msg, ok := <-p.send:
+		case msg, ok := <-p.outbox:
 			p.conn.SetWriteDeadline(time.Now().Add(10 * time.Second))
 			if !ok {
 				p.conn.WriteMessage(websocket.CloseMessage, []byte{})
@@ -89,13 +89,14 @@ func (p *PanelConn) handle(m Msg) {
 	}
 }
 
+// send — неблокирующая отправка панели.
 func (p *PanelConn) send(m Msg) {
 	b := encode(m)
 	if b == nil {
 		return
 	}
 	select {
-	case p.send <- b:
+	case p.outbox <- b:
 	default:
 		log.Printf("panel: очередь переполнена, дропаю")
 	}
@@ -103,7 +104,7 @@ func (p *PanelConn) send(m Msg) {
 
 func (p *PanelConn) close() {
 	p.closeOnce.Do(func() {
-		close(p.send)
+		close(p.outbox)
 		p.conn.Close()
 	})
 }
