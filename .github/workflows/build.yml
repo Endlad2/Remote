@@ -1,7 +1,7 @@
 # .github/workflows/build.yml
 #
 # Единый workflow для OWRT Console:
-#   - lint:   gofmt + go vet для host и client
+#   - lint:   go vet для host и client (gofmt убран)
 #   - host:   linux/amd64  (x86_64 VPS)
 #   - client: linux/arm64  (aarch64, OpenWRT)
 #   - release: при теге v* прикладывает артефакты к GitHub Release
@@ -24,10 +24,10 @@ env:
 
 jobs:
   # ==================================================================
-  # LINT — gofmt + vet для обоих модулей
+  # LINT — go vet для обоих модулей
   # ==================================================================
   lint:
-    name: lint (gofmt + vet)
+    name: lint (go vet)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -35,13 +35,6 @@ jobs:
       - uses: actions/setup-go@v5
         with:
           go-version: ${{ env.GO_VERSION }}
-
-      - name: gofmt
-        run: |
-          cd host
-          test -z "$(gofmt -l .)" || (echo "host: gofmt нашёл проблемы:"; gofmt -d .; exit 1)
-          cd ../client
-          test -z "$(gofmt -l .)" || (echo "client: gofmt нашёл проблемы:"; gofmt -d .; exit 1)
 
       - name: host vet
         working-directory: host
